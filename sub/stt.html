@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" id="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, minimum-scale=1.0,user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="format-detection" content="telephone=no">
+<meta name="title" content="OSS 동아리 디오라마.zip | 웹툰애니메이션디자인학과 | 경운대학교">
+<meta name="description" content="경운대학교 웹툰애니메이션디자인학과 OSS 동아리 디오라마.zip" />
+<meta name="keywords" content="경운대학교, 디오라마, 웹툰애니메이션디자인학과, 2026, 지스타, 웹툰, 게임애니메이션, 영상, 동아리" />
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="OSS 동아리 디오라마.zip | 웹툰애니메이션디자인학과 | 경운대학교">
+<meta property="og:site_name" content="경운대학교">
+<meta property="og:url" content="https://ajh9178.github.io/gstar/">
+<meta property="og:image" content="https://ajh9178.github.io/gstar/img/marks.jpg">
+<meta property="og:description" content="경운대학교 웹툰애니메이션디자인학과 OSS 동아리 디오라마.zip"/>
+	
+<title>OSS 동아리 디오라마.zip | 웹툰애니메이션디자인학과 | 경운대학교</title>
+
+<link rel="stylesheet" href="../css/layout.css">
+<link rel="stylesheet" href="../css/vendor.css">
+<link rel="stylesheet" href="../css/style.css">
+
+<script src="../js/jquery-1.11.3.min.js"></script>
+<script src="../js/vendor.js"></script>
+	
+<link rel="shortcut icon" href="../favicon/favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+	<a href="../index.html" class="back_go"></a>
+	
+	<!-- 동적으로 분할 이미지가 삽입될 컨테이너 -->
+	<div class="sub-detail" id="detailContainer"></div>
+	
+	<a href="javascript:void(0);" class="top_go"></a>
+	<script>
+		/* 동작 타이머 */
+		const IDLE_TIME_LIMIT = 120000;
+		let idleTimer;
+		const targetUrl = '../index.html';
+		function startIdleTimer() {
+			clearTimeout(idleTimer);
+			idleTimer = setTimeout(redirectToHome, IDLE_TIME_LIMIT);
+		}
+		function redirectToHome() {
+			window.location.href = targetUrl;
+		}
+		$(document).on('mousemove keydown scroll touchstart touchend', function() {
+			startIdleTimer();
+		});
+		startIdleTimer();
+		
+		/* 폴더별 분할 이미지 순차 불러오기 & AOS 적용 */
+		const urlParams = new URLSearchParams(window.location.search);
+		const imgNum = urlParams.get('img') || '01';
+		const container = document.getElementById('detailContainer');
+
+		function loadSplitImages(index) {
+			const partStr = String(index).padStart(2, '0');
+			// 경로: ../img/body/stt_01/stt_01.jpg 형태
+			const imgSrc = `../img/body/stt_${imgNum}/stt_${partStr}.jpg`;
+
+			const img = new Image();
+			img.src = imgSrc;
+			img.alt = `상세 이미지 ${imgNum}-${partStr}`;
+
+			img.onload = function() {
+				const wrapper = document.createElement('div');
+				wrapper.setAttribute('data-aos', 'fade-up');
+				wrapper.appendChild(img);
+				container.appendChild(wrapper);
+
+				if (typeof AOS !== 'undefined') {
+					AOS.refresh();
+				}
+
+				loadSplitImages(index + 1);
+			};
+
+			img.onerror = function() {
+				if (typeof AOS !== 'undefined') {
+					AOS.refresh();
+				}
+			};
+		}
+
+		// stt_01.jpg 부터 탐색 시작
+		loadSplitImages(1);
+	</script>
+	<script src="../js/common.js"></script>
+</body>
+</html>
